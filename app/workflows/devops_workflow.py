@@ -2,29 +2,36 @@ from app.agents.deployment_agent import DeploymentAgent
 from app.agents.monitoring_agent import MonitoringAgent
 from app.agents.incident_agent import IncidentAgent
 from app.agents.security_agent import SecurityAgent
+from app.agents.cicd_agent import CICDAgent
 
 
 class DevOpsWorkflow:
     """
-    Coordinates DevOps agents.
+    End-to-end AI DevOps workflow.
     """
 
     def __init__(self):
+
+        self.cicd = CICDAgent()
+        self.security = SecurityAgent()
         self.deployment = DeploymentAgent()
         self.monitoring = MonitoringAgent()
         self.incident = IncidentAgent()
-        self.security = SecurityAgent()
+
 
     def execute(self, application):
 
-        security_result = self.security.scan(application)
+        pipeline = self.cicd.build_pipeline(application)
 
-        deployment_result = self.deployment.deploy(application)
+        security = self.security.scan(application)
 
-        monitoring_result = self.monitoring.check_health(application)
+        deployment = self.deployment.deploy(application)
+
+        monitoring = self.monitoring.check_health(application)
 
         return {
-            "security": security_result,
-            "deployment": deployment_result,
-            "monitoring": monitoring_result
+            "pipeline": pipeline,
+            "security": security,
+            "deployment": deployment,
+            "monitoring": monitoring
         }

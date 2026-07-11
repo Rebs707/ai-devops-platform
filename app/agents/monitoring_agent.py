@@ -1,18 +1,26 @@
-from app.tools.aws_tool import AWSTool
+from app.tools.monitoring_executor import MonitoringExecutor
 
 
 class MonitoringAgent:
+    """
+    Handles application health monitoring.
+    """
 
     def __init__(self):
+
         self.name = "Monitoring Agent"
-        self.aws = AWSTool()
+        self.monitor = MonitoringExecutor()
+
 
     def check_health(self, service):
 
-        environment = self.aws.check_environment(service)
+        metrics = self.monitor.collect_metrics(service)
+
+        logs = self.monitor.collect_logs(service)
 
         return {
             "agent": self.name,
-            "environment": environment,
+            "metrics": metrics,
+            "logs": logs,
             "status": "healthy"
         }
