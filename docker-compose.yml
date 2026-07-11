@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+
+  ai-devops-platform:
+    build: .
+    container_name: ai-devops-platform
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
